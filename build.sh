@@ -1,17 +1,19 @@
 #!/bin/bash
+SCRIPT_DIR=$(dirname $0)
 
 cd $SERVICE_APPROOT
 
 [ -d ~/env ] ||
-    virtualenv --python=python2.7 ~/env || exit 1
+    virtualenv --python=python2.7 ~/env || (echo fail && exit 1)
+
 . ~/env/bin/activate
 
-[ -f requirements.txt ] &&
-    pip install --download-cache=~/.pip-cache -r requirements.txt || exit 1
+[ -f ${SCRIPT_DIR}/requirements.txt ] &&
+    pip install --download-cache=~/.pip-cache -r ${SCRIPT_DIR}/requirements.txt || (echo fail2 && exit 1)
 
-cp -R * ~/
+cp -R ${SCRIPT_DIR}/* ~/
 
 cat > ~/profile << ENDPROFILE
-. ~/env/bin/activate
-export PYTHONPATH=~/
+. ${HOME}/env/bin/activate
+export PYTHONPATH=${HOME}
 ENDPROFILE
